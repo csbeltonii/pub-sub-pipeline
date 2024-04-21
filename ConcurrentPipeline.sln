@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentPipeline", "ConcurrentPipeline\ConcurrentPipeline.csproj", "{C2E7DDEE-99DD-4D6E-A180-A6FC28EC1198}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerService", "WorkerService\WorkerService.csproj", "{C8DAA19A-8DEC-4361-B18C-6F02088A5761}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2E7DDEE-99DD-4D6E-A180-A6FC28EC1198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2E7DDEE-99DD-4D6E-A180-A6FC28EC1198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2E7DDEE-99DD-4D6E-A180-A6FC28EC1198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2E7DDEE-99DD-4D6E-A180-A6FC28EC1198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8DAA19A-8DEC-4361-B18C-6F02088A5761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8DAA19A-8DEC-4361-B18C-6F02088A5761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8DAA19A-8DEC-4361-B18C-6F02088A5761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8DAA19A-8DEC-4361-B18C-6F02088A5761}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CAE4EFA6-F7DD-46C1-9ACB-4239911A3D17}
+	EndGlobalSection
+EndGlobal
