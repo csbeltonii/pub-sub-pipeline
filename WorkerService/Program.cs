@@ -1,3 +1,4 @@
+using ConcurrentPipeline.Batching.Factories;
 using ConcurrentPipeline.Batching.Interfaces;
 using ConcurrentPipeline.Batching.Services;
 using ConcurrentPipeline.Commands;
@@ -12,8 +13,9 @@ builder.Services.AddMediatR(config =>
     }
 );
 builder.Services.AddSingleton<IDataQueueService<BaseModel>>(DataQueueService<BaseModel>.Create(50));
-builder.Services.AddTransient<IBatchConsumer<BaseModel>, BaseModelBatchConsumer>();
+//builder.Services.AddTransient<IBatchConsumer<BaseModel>, BaseModelBatchConsumer>();
 builder.Services.AddTransient<IBatchProducer<BaseModel>>(_ => new DataProducer<BaseModel>(50));
+builder.Services.AddSingleton<IBatchConsumerFactory<BaseModel>, BatchConsumerFactory<BaseModel>>();
 
 var host = builder.Build();
 host.Run();

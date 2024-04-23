@@ -12,11 +12,13 @@ namespace WorkerService
     {
         private readonly ILogger<Worker> _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IBatchConsumerFactory<BaseModel> _batchConsumerFactory;
 
-        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider)
+        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IBatchConsumerFactory<BaseModel> batchConsumerFactory)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
+            _batchConsumerFactory = batchConsumerFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -27,20 +29,32 @@ namespace WorkerService
                 var stopwatch = Stopwatch.StartNew();
 
                 await using var scope = _serviceProvider.CreateAsyncScope();
-                var batchConsumer = _serviceProvider.GetRequiredService<IBatchConsumer<BaseModel>>();
-                var batchConsumer2 = _serviceProvider.GetRequiredService<IBatchConsumer<BaseModel>>();
-                var batchConsumer3 = _serviceProvider.GetRequiredService<IBatchConsumer<BaseModel>>();
-                var mediator = _serviceProvider.GetRequiredService<IMediator>();
+                var linkOptions = new DataflowLinkOptions
+                {
+                    PropagateCompletion = true
+                };
 
                 var bufferBlock = new BufferBlock<BaseModel>();
+                var batchOne = new BatchBlock<BaseModel>(50);
+                var batchTwo = new BatchBlock<BaseModel>(50);
+                var batchThree = new BatchBlock<BaseModel>(50);
 
-                var consumeOneTask = batchConsumer.ConsumeAsync(bufferBlock);
-                var consumeTwoTask = batchConsumer2.ConsumeAsync(bufferBlock);
-                var consumeThreeTask = batchConsumer3.ConsumeAsync(bufferBlock);
+                var batchConsumer = _batchConsumerFactory.CreateConsumer(batchOne);
+                var batchConsumer2 = _batchConsumerFactory.CreateConsumer(batchTwo);
+                var batchConsumer3 = _batchConsumerFactory.CreateConsumer(batchThree);
+                var mediator = _serviceProvider.GetRequiredService<IMediator>();
 
-                var loadModelA = new LoadModelA(100, bufferBlock.Post);
-                var loadModelB = new LoadModelB(100, bufferBlock.Post);
-                var loadModelC = new LoadModelC(100, bufferBlock.Post);
+                var consumeOneTask = batchConsumer!.ConsumeAsync();
+                var consumeTwoTask = batchConsumer2!.ConsumeAsync();
+                var consumeThreeTask = batchConsumer3!.ConsumeAsync();
+
+                var loadModelA = new LoadModelA(1000, bufferBlock.Post);
+                var loadModelB = new LoadModelB(1000, bufferBlock.Post);
+                var loadModelC = new LoadModelC(1000, bufferBlock.Post);
+
+                bufferBlock.LinkTo(batchOne, linkOptions);
+                bufferBlock.LinkTo(batchTwo, linkOptions);
+                bufferBlock.LinkTo(batchThree, linkOptions);
 
                 await Task.WhenAll(
                     mediator.Send(loadModelA, stoppingToken),

@@ -24,7 +24,7 @@ public abstract class BaseLoadModelHandler<TBaseModel>
     {
         await foreach (var model in GetModels(request.Count, typeof(TBaseModel)).WithCancellation(cancellationToken))
         {
-            _logger.LogInformation("Loading {Model}", model.ToString());
+            //_logger.LogInformation("Loading {Model}", model.ToString());
             request.PostFunction(model);
         }
     }
@@ -47,10 +47,12 @@ public abstract class BaseLoadModelHandler<TBaseModel>
             {
                 yield break;
             }
-
+             
             yield return (BaseModel)constructor.Invoke(parameters: new object[] { GetName(count) });
 
-            await Task.Delay((int)random.NextInt64(0, 500));
+            //await Task.Delay((int)random.NextInt64(0, 500));
+            await Task.Delay(100);
+            //await Task.Yield();
 
             count--;
         }
